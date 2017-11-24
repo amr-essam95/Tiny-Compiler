@@ -1,0 +1,83 @@
+The assignment is implemented in python 2.7.12
+
+In the script, The algorithm is divided into many steps:
+
+1- Opening the files that we'll use and defining the reserved words in a list called "reserved_words"
+2- scanning the code
+
+Scanning the code:
+
+scanning is divided into 9 steps:
+
+In order to scan the code we loop on the file of the code line by line:
+
+1- strip the line from the end character
+2- create a variable "i" which scan the line character by character and stops if "i" exceeds the length of the line
+3- if the character is empty space, skip it
+4- create a variable "expr" which holds the token
+5- create two variables that keep the current and last states in the DFA
+6- loop until you reach the done state which indicates finishing the process of finding a token
+7- for each state we have a function that handles the input in this state and increments the i to scan the next character and also change the state to the new state so that in the next loop another the function of another state is applied
+8- check if the state is not done and we reached the end of line which means our token has ended then change state to done
+9- use the function print_expr in case that you reached a done state to print the output of the scanner in the scanner_output.txt file
+
+
+Functions:
+
+1- check_start:
+
+This function handles the input in case that the scanner is in the start state.
+In the start state we have 5 different types of characters that we can get:
+
+- a digit which make us move to the in_num state and in this case we add this character(number) to the token and make the last state as the start state and also increment i in order to get the next character.
+- a letter which make us move to the in_id state and in this case we add this character(letter) to the token and make the 
+last state as the start state and also increment i in order to get the next character.
+- a ":" character which make us move to the in_assignment state and in this case we add this character(:) to the token(expr) and make the last state as the start state and also increment i in order to get the next character.
+- a "{" character which indicates the start of a comment and in this case we move to the in_comment state and make tha last state as start state and also increment i in order to get the next character.
+- any other character is considered as a special character and the state is changed to done in one step and the last state became start state and also we increment i in order to get the next character.
+
+2- check_in_num:
+
+This function handles the input in case that the scanner is in the in_num state.
+
+In this function we check for two possible inputs:
+
+1- a digit which we in this case concatenate this digit to the token(expr) and we increment the i to get more characters and of course keep the current state and the last state.
+2- any other character which indicates that the number has ended and in this case we don't increment the i as we need to check it as if it was a start of a token.
+
+3- check_in_id:
+
+This function handles the input in case that the scanner is in the in_id state.
+
+In this function we check for two possible inputs:
+
+1- a letter so we concatenate it to the token and then keep the last state and increment the i to get more characters.
+2- any other character which indicates that the identifier has ended and we consider it as a delimiter and in this case we don't increment the i as we need to check it as if it was a start of a token in the next loop.
+
+4- check_in_assign:
+
+This function handles the input in case that the scanner is in the in_assign state
+
+In this function we check for two possible inputs:
+1- a "=" character which indicates that this is an assign operator and the state is changed to done and the "i" is incremented so as to check this character as if it was a start of another token.
+2- any other character which indicates that a special symbol was detected and we need to change the state to done and last state to start and keep the i in order to check for it in the next loop as if it was a start of another scnaner.
+
+5- check_in_comment:
+
+This function handles the input in case that the scanner is in the in_assign state
+
+In this function we check for two possible inputs:
+1- "}" which indicates that commenting is finished and we need to go to the last state and ignore the comment
+2- any other character which indicates that we are still in the comment state
+
+6- print_expr:
+
+This function has 4 possible actions depending on the type of token:
+we know the type of token from the last state
+1- if the token was identifier (if last state was in_id) so we need to check if that identifier was in the reserved_words list, if yes we output the identifier as a reserved word and if no we output the identifier as an identifier
+2- if the token was digits (last state was in_num) we print it as a number.
+3- if the token was assign operator(last state was in_assign) we print it as a special symbol
+4- if the last state was start this indicates that it must be a special symbol that moved on the diagram from the start state to the done state directly. 
+
+
+
