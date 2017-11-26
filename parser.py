@@ -1,5 +1,6 @@
 import re
 
+
 def get_token():
 	""" This function get the in order token and proceed to the next token"""
 	pass
