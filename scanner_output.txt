@@ -23,10 +23,7 @@ x : identifier
 - : special symbol
 1 : number
 ; : special symbol
-x : identifier
-[ : special symbol
-y : identifier
-] : special symbol
+xy : identifier
 := : special symbol
 ( : special symbol
 20 : number
@@ -35,7 +32,6 @@ y : identifier
 * : special symbol
 5 : number
 ) : special symbol
-; : special symbol
 until : reserved word
 x : identifier
 = : special symbol
