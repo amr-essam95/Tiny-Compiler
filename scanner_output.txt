@@ -8,7 +8,7 @@ x : identifier
 then : reserved word
 fact : identifier
 := : special symbol
-21 : number
+5000 : number
 ; : special symbol
 repeat : reserved word
 fact : identifier

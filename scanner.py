@@ -3,6 +3,7 @@ import re
 class Scanner(object):
 	"""Scanner for the Tiny language"""
 	output = ""
+	tokens = []
 	input_code = ""
 	reserved_words = []
 
@@ -37,11 +38,21 @@ class Scanner(object):
 		else: return "in_comment","start",expr + ch,i+1
 	def print_expr(self,expr,last_state):
 		if last_state == "in_id":
-			if expr in self.reserved_words:		self.output.write("%s : reserved word\n" % expr)
-			else:								self.output.write("%s : identifier\n" % expr)
-		elif last_state == "in_num":			self.output.write("%s : number\n" % expr)
-		elif last_state == "in_assign":			self.output.write("%s : special symbol\n" % expr)
-		elif last_state == "start":				self.output.write("%s : special symbol\n" % expr)
+			if expr in self.reserved_words:
+				self.output.write("%s : reserved word\n" % expr)
+				self.tokens.append((expr,"reserved word"))
+			else:								
+				self.output.write("%s : identifier\n" % expr)
+				self.tokens.append((expr,"identifier"))
+		elif last_state == "in_num":			
+			self.output.write("%s : number\n" % expr)
+			self.tokens.append((expr,"number"))
+		elif last_state == "in_assign":			
+			self.output.write("%s : special symbol\n" % expr)
+			self.tokens.append((expr,"special symbol"))
+		elif last_state == "start":				
+			self.output.write("%s : special symbol\n" % expr)
+			self.tokens.append((expr,"special symbol"))
 	def run(self):
 		for line in self.input_code:
 			line = line.rstrip()								#Remove the end of line characer
@@ -61,6 +72,7 @@ class Scanner(object):
 					 	last_state = state
 					 	state = "done"
 				self.print_expr(expr,last_state)
+		return self.tokens
 	""" End of Functions """
 
 scanner = Scanner()
