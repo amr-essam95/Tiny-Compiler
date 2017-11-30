@@ -1,4 +1,5 @@
 import re
+from pptree import *
 import scanner as sc
 class Parser(object):
 	"""Parser for the Tiny Language"""
@@ -10,8 +11,6 @@ class Parser(object):
 		scanner = sc.Scanner()
 		self.tokens = scanner.run()
 		self.token_index = 0
-		# print self.tokens,"\n\n"
-		# self.arg = arg
 		
 	def get_token(self):
 		""" This function get the in order token and proceed to the next token"""
@@ -34,8 +33,10 @@ class Parser(object):
 		else:	self.error()
 
 	def program(self):
-		self.stmt_sequence()
+		node = self.stmt_sequence()
+		program = Node(node)
 		print "program found"
+		print_tree(program)
 
 	def stmt_sequence(self):
 		self.statement()
