@@ -1,6 +1,13 @@
 import re
 from pptree import *
 import scanner as sc
+import tree as Tree
+
+
+scene = QGraphicsScene()
+x_root = 0
+y_root = 0
+
 class Parser(object):
 	"""Parser for the Tiny Language"""
 	tokens = ""
@@ -41,7 +48,7 @@ class Parser(object):
 	def stmt_sequence(self):
 		self.statement()
 		while self.top_token()[0] == ';':
-			self.match(self.top_token()[0])
+			self.match(self.top_token()[0],x_root,y_root,scene,"r")
 			self.statement()
 		print "stmt-sequence found"
 
@@ -57,6 +64,7 @@ class Parser(object):
 	def ifStmt(self):
 		self.match('if')
 		self.exp()
+		temp = Tree("if"," ",)
 		self.match('then')
 		self.stmt_sequence()
 		if self.top_token()[0] == 'else':
@@ -69,13 +77,13 @@ class Parser(object):
 		self.match('repeat')
 		self.stmt_sequence()
 		self.match('until')
-		self.exp()
+		temp = self.exp()
 		print "repeat_stmt found"
 
 	def assign_stmt(self):
 		self.match('identifier',True)
 		self.match(':=')
-		self.exp()
+		temp = self.exp()
 		print "assign_stmt found"
 
 	def read_stmt(self):
@@ -85,44 +93,58 @@ class Parser(object):
 
 	def write_stmt(self):
 		self.match('write')
-		self.exp()
+		temp = self.exp()
 		print "write_stmt found"
 
 	def exp(self):
-		self.simple_exp()
+		temp = self.simple_exp()
 		if self.top_token()[0] == '<' or self.top_token()[0] == '=':
+			tree = Tree("comparison",self.top_token()[0],x_root,y_root,scene,"e")
 			self.match(self.top_token()[0])
 			self.simple_exp()
 		print "exp found"
 
 
 	def simple_exp(self):
-		self.term()
+		temp = self.term()
 		while self.top_token()[0] == '+' or self.top_token()[0] == '-':
+			tree = Tree("addop",self.top_token()[0],x_root ,y_root,scene,"e")
+			tree.append(temp)
 			self.match(self.top_token()[0])
-			self.term()
+			temp2 = self.term()
+			tree.append(temp2)
+			temp = tree
 		print "simple-exp found"
+		return temp
 
 
 
 	def term(self):
-		self.factor()
+		temp = self.factor()
 		while self.top_token()[0] == "*":
+			tree = Tree("mulop","*",x_root,y_root,scene,"e")
+			tree.append(temp)
 			self.match(self.top_token()[0])
-			self.factor()
+			temp2 = self.factor()
+			tree.append(temp2)
+			temp = tree
 		print "term found"
+		return temp
 
 	def factor(self):
 		if self.top_token()[0] == '(':
 			self.match('(')
-			self.exp()
+			temp = self.exp()
 			self.match(')')
 		elif self.top_token()[1] == 'number':
+			temp = Tree("number",self.top_token()[1],x_root,y_root,scene,"e")
 			self.match(self.top_token()[1],True)
 		elif self.top_token()[1] == 'identifier':
 			self.match(self.top_token()[1],True)
+			temp = Tree("identifier",self.top_token()[1],x_root,y_root,scene,"e")
 		else:	self.error()
 		print "factor found"
+		return temp
 
 parser = Parser()
 parser.program()
