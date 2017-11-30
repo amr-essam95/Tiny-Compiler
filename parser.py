@@ -64,7 +64,8 @@ class Parser(object):
 	def ifStmt(self):
 		self.match('if')
 		self.exp()
-		temp = Tree("if"," ",)
+		temp = Tree("if"," ",x_root,y_root,scene,"e")
+		# temp.append
 		self.match('then')
 		self.stmt_sequence()
 		if self.top_token()[0] == 'else':

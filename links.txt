@@ -1,1 +1,4 @@
 https://stackoverflow.com/questions/2173146/how-can-i-draw-nodes-and-edges-in-pyqt
+
+The code is incomplete at the if condition in the parse,
+i don't know how to append the then part in the if condition
