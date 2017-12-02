@@ -1,9 +1,12 @@
 import re
 from pptree import *
 import scanner as sc
-import tree as Tree
+import tree as t
+from PyQt4.QtGui import *
+from PyQt4.QtCore import *
 
 
+app = QApplication([])
 scene = QGraphicsScene()
 x_root = 0
 y_root = 0
@@ -40,112 +43,142 @@ class Parser(object):
 		else:	self.error()
 
 	def program(self):
-		node = self.stmt_sequence()
-		program = Node(node)
+		# root = t.Node("root"," ","r",True,True)
+		temp_tree = t.Tree("root"," ",500 ,500,scene,"r")
+		tree = self.stmt_sequence(temp_tree.root)
+		# program = Node(node)
 		print "program found"
-		print_tree(program)
+		return tree
 
-	def stmt_sequence(self):
-		self.statement()
+	def stmt_sequence(self,node):
+		node.add_child(self.statement())
 		while self.top_token()[0] == ';':
-			self.match(self.top_token()[0],x_root,y_root,scene,"r")
-			self.statement()
+			self.match(self.top_token()[0])
+			node.add_child(self.statement())
 		print "stmt-sequence found"
+		return node
 
 	def statement(self):
-		if self.top_token()[0] == 'if':	self.ifStmt()
-		elif self.top_token()[0] == 'repeat':	self.repeat_stmt()
-		elif self.top_token()[1] == 'identifier': self.assign_stmt()
-		elif self.top_token()[0] == 'read': self.read_stmt()
-		elif self.top_token()[0] == 'write': self.write_stmt() 
+		if self.top_token()[0] == 'if':	temp = self.ifStmt()
+		elif self.top_token()[0] == 'repeat':	temp = self.repeat_stmt()
+		elif self.top_token()[1] == 'identifier': temp = self.assign_stmt()
+		elif self.top_token()[0] == 'read': temp = self.read_stmt()
+		elif self.top_token()[0] == 'write': temp = self.write_stmt() 
 		else: self.error() 
 		print "statement found"
+		return temp
 
 	def ifStmt(self):
 		self.match('if')
-		self.exp()
-		temp = Tree("if"," ",x_root,y_root,scene,"e")
-		# temp.append
+		temp = t.Node("if"," ","r",True,False)
+		temp.add_child(self.exp())
 		self.match('then')
-		self.stmt_sequence()
+		temp_node = self.stmt_sequence(temp)
+		simple = True
 		if self.top_token()[0] == 'else':
+			simple = False
 			self.match('else')
-			self.stmt_sequence()
+			node = self.stmt_sequence(temp_node)
 		self.match('end')
 		print "if-stmt found"
+		if simple:
+			return temp_node
+		return node
 
 	def repeat_stmt(self):
+		temp_node = t.Node("repeat"," ","r",True,False)
 		self.match('repeat')
-		self.stmt_sequence()
+		node = self.stmt_sequence(temp_node)
 		self.match('until')
-		temp = self.exp()
+		node.add_child(self.exp())
 		print "repeat_stmt found"
+		return node
 
 	def assign_stmt(self):
+		id = self.top_token()[0]
 		self.match('identifier',True)
 		self.match(':=')
-		temp = self.exp()
+		temp = t.Node("assign",id,"r",True,False)
+		temp.add_child(self.exp())
 		print "assign_stmt found"
+		return temp
 
 	def read_stmt(self):
 		self.match('read')
+		id = self.top_token()[0]
 		self.match('identifier',True)
 		print "read_stmt"
+		return t.Node("read",id,"r",True,False)
 
 	def write_stmt(self):
 		self.match('write')
-		temp = self.exp()
+		temp = t.Node("write"," ","r",True,False)
+		temp.add_child(self.exp())
 		print "write_stmt found"
+		return temp
 
 	def exp(self):
-		temp = self.simple_exp()
+		temp_node = self.simple_exp()
+		simple = True
 		if self.top_token()[0] == '<' or self.top_token()[0] == '=':
-			tree = Tree("comparison",self.top_token()[0],x_root,y_root,scene,"e")
+			simple = False
+			temp = t.Node("comparison",self.top_token()[0],"e",True,True)
+			temp.add_child(temp_node)
 			self.match(self.top_token()[0])
-			self.simple_exp()
+			temp.add_child(self.simple_exp())
 		print "exp found"
+		if simple:
+			return temp_node
+		return temp
 
 
 	def simple_exp(self):
-		temp = self.term()
+		temp_node = self.term()
+		simple = True
 		while self.top_token()[0] == '+' or self.top_token()[0] == '-':
-			tree = Tree("addop",self.top_token()[0],x_root ,y_root,scene,"e")
-			tree.append(temp)
+			simple = False
+			temp = t.Node("op",self.top_token()[0],"e",True,True)
+			temp.add_child(temp_node)
 			self.match(self.top_token()[0])
-			temp2 = self.term()
-			tree.append(temp2)
-			temp = tree
+			temp.add_child(self.term())
+			temp_node = temp
 		print "simple-exp found"
+		if simple:
+			return temp_node
 		return temp
 
 
 
 	def term(self):
-		temp = self.factor()
+		temp_node = self.factor()
+		simple = True
 		while self.top_token()[0] == "*":
-			tree = Tree("mulop","*",x_root,y_root,scene,"e")
-			tree.append(temp)
+			simple = False
+			temp = t.Node("op","*","e",True,True)
+			temp.add_child(temp_node)
 			self.match(self.top_token()[0])
-			temp2 = self.factor()
-			tree.append(temp2)
-			temp = tree
+			temp.add_child(self.factor())
+			temp_node = temp
 		print "term found"
+		if simple:
+			return temp_node
 		return temp
 
 	def factor(self):
+		" We'll assume that factor is number or identifier only just for now "
 		if self.top_token()[0] == '(':
 			self.match('(')
 			temp = self.exp()
 			self.match(')')
 		elif self.top_token()[1] == 'number':
-			temp = Tree("number",self.top_token()[1],x_root,y_root,scene,"e")
+			temp = t.Node("number",self.top_token()[1],"e",True,True)
 			self.match(self.top_token()[1],True)
 		elif self.top_token()[1] == 'identifier':
 			self.match(self.top_token()[1],True)
-			temp = Tree("identifier",self.top_token()[1],x_root,y_root,scene,"e")
+			temp = t.Node("identifier",self.top_token()[1],"e",True,True)
 		else:	self.error()
 		print "factor found"
 		return temp
 
 parser = Parser()
-parser.program()
+tree = parser.program()
