@@ -44,11 +44,11 @@ class Parser(object):
 
 	def program(self):
 		# root = t.Node("root"," ","r",True,True)
-		temp_tree = t.Tree("root"," ",500 ,500,scene,"r")
-		tree = self.stmt_sequence(temp_tree.root)
+		temp = t.Node("root"," ","r",False,False)
+		root = self.stmt_sequence(temp)
 		# program = Node(node)
 		print "program found"
-		return tree
+		return root
 
 	def stmt_sequence(self,node):
 		node.add_child(self.statement())
@@ -181,4 +181,13 @@ class Parser(object):
 		return temp
 
 parser = Parser()
-tree = parser.program()
+root = parser.program()
+tree = t.Tree(root,500,500,scene)
+tree.print_tree(6)
+scene = tree.scene
+
+view = QGraphicsView(scene)
+view.setRenderHint(QPainter.Antialiasing)
+view.resize(1000, 600)
+view.show()
+app.exec_()

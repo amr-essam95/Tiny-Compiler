@@ -4,9 +4,10 @@ from PyQt4.QtCore import *
 old_x = 0
 
 class Tree:
-    def __init__(self,val,val2 ,x_root ,y_root,scene,node_type):
-
-        self.root = Node(val,val2,node_type,False,False) 
+    # def __init__(self,val,val2 ,x_root ,y_root,scene,node_type):
+    def __init__(self,node,x_root,y_root,scene):
+        # self.root = Node(val,val2,node_type,False,False) 
+        self.root = node
         self.x_root = x_root
         self.y_root = y_root
         self.scene = scene
