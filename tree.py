@@ -16,8 +16,8 @@ class Tree:
     def print_tree(self,levels):
         self.level = levels
         self.print_tree_hidden(self.root,self.x_root,self.y_root)
-    def print_tree_hidden(self,input_node ,x  , y ):
-        self.level -= 2
+    def print_tree_hidden(self,input_node ,x ,y):
+        self.level -= 1
         current_node = input_node
         if current_node.print_node:
             if current_node.type == "e":
@@ -29,20 +29,31 @@ class Tree:
             text.setPos(x+25,y+15)
             self.scene.addItem(text)
         total_x = len(current_node.children) * 100 * self.level
+        print "t ",total_x
         for i,node in enumerate(current_node.children):
             margin = (total_x - (len(current_node.children)*100))/(len(current_node.children))
+            print "m ",margin
             if i < len(current_node.children)/2:
                 new_x = x-(total_x/2) + (i) * (margin + 100)
-            elif i >= len(current_node.children)/2:
+                print "new_x : ",new_x
+            elif i > len(current_node.children)/2:
                 new_x = x-(total_x/2) + (i) * (margin + 100)
+                print "new_x : ",new_x
             else:
                 new_x = x
             new_y = y + 150
             self.print_tree_hidden(node,new_x,new_y)
             if node.connect:
                 self.scene.addLine(x + 50,y + 50,new_x + 50,new_y,pen = QPen())
-            self.level += 2
-
+            self.level += 1
+            print "%s\n\n"%current_node.val
+    def get_levels(self,node):
+        max = 0
+        for child in node.children:
+            l = self.get_levels(child)
+            if l > max:
+                max = l
+        return max + 1
 
 
 class Node:

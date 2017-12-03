@@ -5,7 +5,6 @@ import tree as t
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
-
 app = QApplication([])
 scene = QGraphicsScene()
 x_root = 0
@@ -183,7 +182,8 @@ class Parser(object):
 parser = Parser()
 root = parser.program()
 tree = t.Tree(root,500,500,scene)
-tree.print_tree(6)
+levels = tree.get_levels(tree.root)
+tree.print_tree(levels -1)
 scene = tree.scene
 
 view = QGraphicsView(scene)
