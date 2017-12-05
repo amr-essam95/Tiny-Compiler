@@ -1,64 +1,60 @@
-read_stmt found
-statement found
-factor found
-term found
-simple-exp found
-factor found
-term found
-simple-exp found
-exp found
-factor found
-term found
-simple-exp found
-exp found
-assign_stmt found
-statement found
-factor found
-factor found
-term found
-simple-exp found
-exp found
-assign_stmt found
-statement found
-factor found
-term found
-factor found
-term found
-simple-exp found
-exp found
-assign_stmt found
-statement found
-factor found
-term found
-factor found
-factor found
-term found
-simple-exp found
-exp found
-factor found
-term found
-simple-exp found
-exp found
-assign_stmt found
-statement found
-stmt-sequence found
-factor found
-term found
-simple-exp found
-factor found
-term found
-simple-exp found
-exp found
-repeat_stmt found
-statement found
-factor found
-term found
-simple-exp found
-exp found
-write_stmt found
-statement found
-stmt-sequence found
-if-stmt found
-statement found
-stmt-sequence found
-program found
+identifier
+heloooooooooooo
+i am identifier then
+i am identifier *
+i am identifier ;
+i am identifier -
+i am identifier =
+number
+heloooooooooooo
+i am identifier end
+t  400
+m  300
+t  1200
+m  200
+new_x :  -100
+t  400
+m  100
+new_x :  -300
+t  0
+m  100
+t  0
+m  200
+new_x :  200
+t  200
+m  100
+t  0
+m  200
+t  600
+m  100
+new_x :  200
+t  100
+m  0
+t  0
+m  -100
+new_x :  200
+t  0
+m  -100
+t  0
+m  100
+t  100
+m  0
+t  0
+m  -100
+new_x :  500
+t  0
+m  -100
+t  0
+m  100
+new_x :  600
+t  200
+m  0
+new_x :  500
+t  0
+m  0
+t  0
+m  200
+new_x :  800
+t  200
+m  100
+t  0

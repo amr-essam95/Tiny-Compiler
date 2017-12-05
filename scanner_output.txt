@@ -1,6 +1,3 @@
-read : reserved word
-x : identifier
-; : special symbol
 if : reserved word
 0 : number
 < : special symbol
@@ -22,16 +19,6 @@ x : identifier
 x : identifier
 - : special symbol
 1 : number
-; : special symbol
-xy : identifier
-:= : special symbol
-( : special symbol
-20 : number
-+ : special symbol
-35 : number
-* : special symbol
-5 : number
-) : special symbol
 until : reserved word
 x : identifier
 = : special symbol

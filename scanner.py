@@ -55,8 +55,10 @@ class Scanner(object):
 			self.tokens.append((expr,"special symbol"))
 	def run(self):
 		for line in self.input_code:
-			line = line.rstrip()								#Remove the end of line characer
+			line = line.strip()								#Remove the end of line characer
 			i = 0
+			if line == "":
+				continue
 			while i < len(line):
 				if line[i] ==  " ":								#Skip the spaces
 					i += 1
