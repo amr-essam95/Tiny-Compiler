@@ -16,17 +16,21 @@ class Tree:
     def print_tree(self,levels):
         self.level = levels
         self.print_tree_hidden(self.root,self.x_root,self.y_root)
-    def print_tree_hidden(self,input_node ,x ,y):
+
+    def print_tree_hidden_breadth(self,input_node,x,y):
         self.level -= 1
         current_node = input_node
         if current_node.print_node:
             if current_node.type == "e":
-                self.scene.addEllipse(x,y,100,50,pen = QPen(),brush = QBrush())
+                self.scene.addEllipse(x,y,50,25,pen = QPen(),brush = QBrush())
             else:
-                self.scene.addRect(x,y,100,50,pen = QPen(),brush = QBrush())
-            text = QGraphicsTextItem(current_node.val)
+                self.scene.addRect(x,y,50,25,pen = QPen(),brush = QBrush())
+            font = QFont()
+            font.setPixelSize(10)
+            text = QGraphicsTextItem(str(current_node.val)+"\n"+str(current_node.val2))
+            text.setFont(font)
             text.boundingRect()
-            text.setPos(x+25,y+15)
+            text.setPos(x+5,y+1)
             self.scene.addItem(text)
         total_x = len(current_node.children) * 100 * self.level
         print "t ",total_x
@@ -44,9 +48,42 @@ class Tree:
             new_y = y + 150
             self.print_tree_hidden(node,new_x,new_y)
             if node.connect:
-                self.scene.addLine(x + 50,y + 50,new_x + 50,new_y,pen = QPen())
+                self.scene.addLine(x + 25,y + 25,new_x + 25,new_y,pen = QPen())
             self.level += 1
-            print "%s\n\n"%current_node.val
+    def print_tree_hidden(self,input_node ,x ,y):
+        self.level -= 1
+        current_node = input_node
+        if current_node.print_node:
+            if current_node.type == "e":
+                self.scene.addEllipse(x,y,50,25,pen = QPen(),brush = QBrush())
+            else:
+                self.scene.addRect(x,y,50,25,pen = QPen(),brush = QBrush())
+            font = QFont()
+            font.setPixelSize(10)
+            text = QGraphicsTextItem(str(current_node.val)+"\n"+str(current_node.val2))
+            text.setFont(font)
+            text.boundingRect()
+            text.setPos(x+5,y+1)
+            self.scene.addItem(text)
+        total_x = len(current_node.children) * 100 * self.level
+        print "t ",total_x
+        for i,node in enumerate(current_node.children):
+            margin = (total_x - (len(current_node.children)*100))/(len(current_node.children))
+            print "m ",margin
+            if i < len(current_node.children)/2:
+                new_x = x-(total_x/2) + (i) * (margin + 100)
+                print "new_x : ",new_x
+            elif i > len(current_node.children)/2:
+                new_x = x-(total_x/2) + (i) * (margin + 100)
+                print "new_x : ",new_x
+            else:
+                new_x = x
+            new_y = y + 150
+            self.print_tree_hidden(node,new_x,new_y)
+            if node.connect:
+                self.scene.addLine(x + 25,y + 25,new_x + 25,new_y,pen = QPen())
+            self.level += 1
+            # print "%s\n\n"%current_node.val
     def get_levels(self,node):
         max = 0
         for child in node.children:

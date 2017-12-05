@@ -20,6 +20,7 @@ class Parser(object):
 		scanner = sc.Scanner()
 		self.tokens = scanner.run()
 		self.token_index = 0
+		self.out = open('parser_output3.txt','w')
 		
 	def get_token(self):
 		""" This function get the in order token and proceed to the next token"""
@@ -46,7 +47,7 @@ class Parser(object):
 		temp = t.Node("root"," ","r",False,False)
 		root = self.stmt_sequence(temp)
 		# program = Node(node)
-		print "program found"
+		self.out.write("program found\n")
 		return root
 
 	def stmt_sequence(self,node):
@@ -54,7 +55,7 @@ class Parser(object):
 		while self.top_token()[0] == ';':
 			self.match(self.top_token()[0])
 			node.add_child(self.statement())
-		print "stmt-sequence found"
+		self.out.write("stmt-sequence found\n")
 		return node
 
 	def statement(self):
@@ -64,7 +65,7 @@ class Parser(object):
 		elif self.top_token()[0] == 'read': temp = self.read_stmt()
 		elif self.top_token()[0] == 'write': temp = self.write_stmt() 
 		else: self.error() 
-		print "statement found"
+		self.out.write("statement found\n")
 		return temp
 
 	def ifStmt(self):
@@ -79,7 +80,7 @@ class Parser(object):
 			self.match('else')
 			node = self.stmt_sequence(temp_node)
 		self.match('end')
-		print "if-stmt found"
+		self.out.write("if-stmt found\n")
 		if simple:
 			return temp_node
 		return node
@@ -90,7 +91,7 @@ class Parser(object):
 		node = self.stmt_sequence(temp_node)
 		self.match('until')
 		node.add_child(self.exp())
-		print "repeat_stmt found"
+		self.out.write("repeat_stmt found\n")
 		return node
 
 	def assign_stmt(self):
@@ -99,21 +100,21 @@ class Parser(object):
 		self.match(':=')
 		temp = t.Node("assign",id,"r",True,False)
 		temp.add_child(self.exp())
-		print "assign_stmt found"
+		self.out.write("assign_stmt found\n")
 		return temp
 
 	def read_stmt(self):
 		self.match('read')
 		id = self.top_token()[0]
 		self.match('identifier',True)
-		print "read_stmt"
+		self.out.write("read_stmt\n")
 		return t.Node("read",id,"r",True,False)
 
 	def write_stmt(self):
 		self.match('write')
 		temp = t.Node("write"," ","r",True,False)
 		temp.add_child(self.exp())
-		print "write_stmt found"
+		self.out.write("write_stmt found\n")
 		return temp
 
 	def exp(self):
@@ -122,10 +123,10 @@ class Parser(object):
 		if self.top_token()[0] == '<' or self.top_token()[0] == '=':
 			simple = False
 			temp = t.Node("comparison",self.top_token()[0],"e",True,True)
-			temp.add_child(temp_node)
 			self.match(self.top_token()[0])
+			temp.add_child(temp_node)
 			temp.add_child(self.simple_exp())
-		print "exp found"
+		self.out.write("exp found\n")
 		if simple:
 			return temp_node
 		return temp
@@ -141,7 +142,7 @@ class Parser(object):
 			self.match(self.top_token()[0])
 			temp.add_child(self.term())
 			temp_node = temp
-		print "simple-exp found"
+		self.out.write("simple-exp found\n")
 		if simple:
 			return temp_node
 		return temp
@@ -158,7 +159,7 @@ class Parser(object):
 			self.match(self.top_token()[0])
 			temp.add_child(self.factor())
 			temp_node = temp
-		print "term found"
+		self.out.write("term found\n")
 		if simple:
 			return temp_node
 		return temp
@@ -170,13 +171,13 @@ class Parser(object):
 			temp = self.exp()
 			self.match(')')
 		elif self.top_token()[1] == 'number':
-			temp = t.Node("number",self.top_token()[1],"e",True,True)
+			temp = t.Node("number",self.top_token()[0],"e",True,True)
 			self.match(self.top_token()[1],True)
 		elif self.top_token()[1] == 'identifier':
+			temp = t.Node("identifier",self.top_token()[0],"e",True,True)
 			self.match(self.top_token()[1],True)
-			temp = t.Node("identifier",self.top_token()[1],"e",True,True)
 		else:	self.error()
-		print "factor found"
+		self.out.write("factor found\n")
 		return temp
 
 parser = Parser()
