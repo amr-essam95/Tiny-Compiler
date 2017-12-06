@@ -18,6 +18,28 @@ class Tree:
         self.print_tree_hidden(self.root,self.x_root,self.y_root)
 
     def print_tree_hidden_breadth(self,input_node,x,y):
+        nodes = []
+        stack = [input_node]
+        while stack:
+            current_node  = stack[0]
+            if current_node.print_node:
+                if current_node.type == "e":
+                    self.scene.addEllipse(x,y,50,25,pen = QPen(),brush = QBrush())
+                else:
+                    self.scene.addRect(x,y,50,25,pen = QPen(),brush = QBrush())
+                font = QFont()
+                font.setPixelSize(10)
+                text = QGraphicsTextItem(str(current_node.val)+"\n"+str(current_node.val2))
+                text.setFont(font)
+                text.boundingRect()
+                text.setPos(x+5,y+1)
+                self.scene.addItem(text)
+            stack = stack[1:]
+            nodes.append(current_node)
+            for child in current_node.children:
+                stack.append(child)
+
+
         self.level -= 1
         current_node = input_node
         if current_node.print_node:
