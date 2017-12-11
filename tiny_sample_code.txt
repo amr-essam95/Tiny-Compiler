@@ -1,4 +1,5 @@
 {sample program in TINY language- computes factorial}
+read x; 
 if 0<x then {don’t compute if x<=0}
 fact:=5000;
 repeat

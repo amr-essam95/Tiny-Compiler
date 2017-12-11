@@ -184,7 +184,8 @@ parser = Parser()
 root = parser.program()
 tree = t.Tree(root,500,500,scene)
 levels = tree.get_levels(tree.root)
-tree.print_tree(levels -1)
+tree.print_tree_hidden_breadth(tree.root)
+# tree.print_tree(levels -1)
 scene = tree.scene
 
 view = QGraphicsView(scene)

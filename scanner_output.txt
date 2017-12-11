@@ -1,3 +1,6 @@
+read : reserved word
+x : identifier
+; : special symbol
 if : reserved word
 0 : number
 < : special symbol
