@@ -121,7 +121,7 @@ class Parser(object):
 	def exp(self):
 		temp_node = self.simple_exp()
 		simple = True
-		if self.top_token()[0] == '<' or self.top_token()[0] == '=':
+		if self.comparator():
 			simple = False
 			temp = t.Node("op","(%s)" % self.top_token()[0],"e",True,True)
 			self.match(self.top_token()[0])
@@ -136,7 +136,7 @@ class Parser(object):
 	def simple_exp(self):
 		temp_node = self.term()
 		simple = True
-		while self.top_token()[0] == '+' or self.top_token()[0] == '-':
+		while self.addop():
 			simple = False
 			temp = t.Node("op","(%s)" % self.top_token()[0],"e",True,True)
 			temp.add_child(temp_node)
@@ -153,7 +153,7 @@ class Parser(object):
 	def term(self):
 		temp_node = self.factor()
 		simple = True
-		while self.top_token()[0] == "*":
+		while self.mulop():
 			simple = False
 			temp = t.Node("op","(*)","e",True,True)
 			temp.add_child(temp_node)
@@ -180,6 +180,29 @@ class Parser(object):
 		else:	self.error()
 		self.out.write("Factor Found\n")
 		return temp
+
+	def mulop(self):
+		if self.top_token()[0] == "*":
+			self.out.write("Mul_Operator Found\n")
+			return True
+		else:
+			return False
+
+	def addop(self):
+		if self.top_token()[0] == '+' or self.top_token()[0] == '-':
+			self.out.write("Add_Operator Found\n")
+			return True
+		else:
+			return False
+
+	def comparator(self):
+		if self.top_token()[0] == '<' or self.top_token()[0] == '=':
+			self.out.write("Comparator_Operator Found\n")
+			return True
+		else:
+			return False
+
+
 
 parser = Parser()
 root = parser.program()
