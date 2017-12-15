@@ -31,13 +31,15 @@ class Parser(object):
 		""" This function gets the in order token but don't proceed to the next token"""
 		return self.tokens[self.token_index]
 
-	def error(self):
+	def error(self,err):
 		print "\n\nError Occured !!!\n\n"
+		print err
 		sys.exit()
 
 
 	def match(self,expected_token,check_second = False):
 		token = self.top_token()[0]
+		print token
 		if check_second:
 			token = self.top_token()[1]
 		if token == expected_token:	self.get_token()

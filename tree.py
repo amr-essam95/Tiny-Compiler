@@ -23,8 +23,8 @@ class Tree:
             return parent.children[node_index - 1]
 
     def print_tree_hidden_breadth(self,input_node):
-        width = 80
-        height = 50
+        width = 100
+        height = 60
         nodes = []
         stack = [input_node]
         y = 50
@@ -36,7 +36,7 @@ class Tree:
                 last_depth = current_node.depth
                 x = 50
             if current_node.print_node:
-                y = height*2* (current_node.depth + 1)
+                y = height*3* (current_node.depth + 1)
                 if current_node.parent.x - 50 > x:
                     x = current_node.parent.x - 50
                 current_node.x = x
@@ -58,7 +58,7 @@ class Tree:
                     else:
                         self.scene.addLine(current_node.parent.x+width/2,current_node.parent.y+height,current_node.x + width/2,current_node.y,pen = QPen())
                 font = QFont()
-                font.setPixelSize(10)
+                font.setPixelSize(12)
                 text = QGraphicsTextItem(str(current_node.val))
                 text2 = QGraphicsTextItem(str(current_node.val2))
                 text.setFont(font)
@@ -69,7 +69,7 @@ class Tree:
                 text2.setPos(x+(width/3),y+height/4 + 15)
                 self.scene.addItem(text)
                 self.scene.addItem(text2)
-                x = x + width + 30
+                x = x + width + 50
             stack = stack[1:]
             nodes.append(current_node)
             for child in current_node.children:
